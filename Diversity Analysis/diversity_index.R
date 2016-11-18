@@ -82,7 +82,7 @@ mapping = dplyr::rename(mapping, region=FIPS, value=DiversityIndex)
 mapping$region = as.numeric(mapping$region)
 
 #map data
-county_choropleth(mapping, title = "Diversity Index in Counties Across the US", state_zoom=c("california"))
+county_choropleth(mapping, title = "Diversity Index in Counties in California")
 #can also add optiions "state_zoom = c("california") or other lowercase state names
 
 head(by_county)

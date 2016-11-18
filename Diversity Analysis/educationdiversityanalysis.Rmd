@@ -12,7 +12,7 @@ library(plyr)
 library(data.table)
 library(ggplot2)
 
-setwd('/Users/jackpetersen/STAT_405_Diversity_Project/Source\ Data')  #Set the working directory
+setwd('C:/Users/kenny/OneDrive/Documents/Fall 2016/STAT 405- R for Data Science/STAT_405_Diversity_Project/Source\ Data')  #Set the working directory
 divindex = read.csv("Diversity\ Index\ Per\ County.csv", header = TRUE, stringsAsFactors = FALSE)
 divindex = subset(divindex, divindex$STATE != "") %>% select(COUNTY, STATE, Diversity.Index)
 divindex = mutate(divindex, STATE = substr(divindex$STATE, 2,3))
@@ -25,7 +25,7 @@ countydata = mutate(countydata, fullname = paste(V4, V1, sep = ", "))
 countydata = select(countydata, -V5)
 countydata = rename(countydata, c("V1"="STATE", "V2"="STATEFIP", "V3"="COUNTYFIPS", "V4"="COUNTY", "fullname"="fullname"))
 
-setwd('/Users/jackpetersen/STAT_405_Diversity_Project/IPUMS\ Data/Education\ Data')  #Set the working directory
+setwd('C:/Users/kenny/OneDrive/Documents/Fall 2016/STAT 405- R for Data Science/STAT_405_Diversity_Project/IPUMS\ Data/Education\ Data')  #Set the working directory
 
 
 

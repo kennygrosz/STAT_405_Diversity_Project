@@ -1,0 +1,81 @@
+---
+title: "STAT 405 Homework 5"
+author: "Jack Petersen"
+date: "November 12, 2016"
+output: html_document
+---
+
+```{r setup}
+
+require(dplyr)
+library(plyr)
+library(data.table)
+library(ggplot2)
+
+setwd('/Users/jackpetersen/STAT_405_Diversity_Project/SourceData')  #Set the working directory
+divindex = read.csv("diversityindexpercounty.csv", header = TRUE, stringsAsFactors = FALSE)
+divindex = subset(divindex, divindex$STATE != "") %>% select(COUNTY, STATE, Diversity.Index)
+divindex = mutate(divindex, STATE = substr(divindex$STATE, 2,3))
+divindex = mutate(divindex, COUNTYSTATE = paste(COUNTY, STATE, sep = ", "))
+
+
+setwd('/Users/jackpetersen/STAT_405_Diversity_Project/IPUMSData/educationdata')  #Set the working directory
+
+countydata = read.csv("national_county.csv", header = FALSE, stringsAsFactors = FALSE)
+
+countydata = mutate(countydata, fullname = paste(V4, V1, sep = ", "))
+countydata = select(countydata, -V5)
+countydata = rename(countydata, c("V1"="STATE", "V2"="STATEFIP", "V3"="COUNTYFIPS", "V4"="COUNTY", "fullname"="fullname"))
+
+edudata = read.csv("ipums_educ.csv", header = TRUE, stringsAsFactors = FALSE) # Load data csv
+# Data cleaning and manipulation
+school1 = select(edudata, -GQ, -DATANUM, -RACE, -RACED, -PERNUM, -PERWT, -SERIAL, -HHWT)
+
+school2 = subset(school1, edudata$SCHOOL == 1 & edudata$YEAR == 2011 & edudata$COUNTYFIPS != 0) 
+
+school3 = inner_join(school2, countydata, by="STATEFIP", "COUNTYFIPS")
+
+school4 = subset(school3, school3$COUNTYFIPS.x == school3$COUNTYFIPS.y)
+# Clean up oolsout
+school5 = select(school4, -REGION, -YEAR, -SCHOOL, -COUNTYFIPS.y, -fullname)
+
+school6 = full_join(school5, divindex, by="COUNTY")
+
+school7 = subset(school6, school6$STATE.x == school6$STATE.y)
+school8 = mutate(school7, STATECOUNTY=paste(COUNTY, STATE.x, sep=", "))
+school9 = select(school8, EDUC, EDUCD, STATECOUNTY, Diversity.Index)
+
+school10= as.data.frame(table(school9$STATECOUNTY))
+school11 = rename(school10, c("Var1"="STATECOUNTY", "Freq"="freq"))
+
+
+
+# Cleaning
+
+# The All important education index
+
+school12.dt = data.table(school9)
+
+school13 = school12.dt[,list(EDUC=(sum(EDUC))), by="STATECOUNTY"]
+
+school14 = inner_join(school13, school11, by="STATECOUNTY")
+school15 = mutate(school14, avg = EDUC/freq)
+
+school16 = inner_join(school15, school9, by="STATECOUNTY")
+
+school17 = school16[!duplicated(school16[,c('STATECOUNTY','avg')]),] %>% select(-EDUC.y, -EDUCD)
+
+
+linegraph = ggplot(school17, aes(x=Diversity.Index, y=avg)) + geom_point()#Create point graph
+linegraph = linegraph + labs(title="Diversity by Education Level", x="Diversity Index", y="Education")
+linegraph = linegraph + geom_smooth(method=lm, se=TRUE)
+linegraph
+
+
+
+
+
+
+
+
+```

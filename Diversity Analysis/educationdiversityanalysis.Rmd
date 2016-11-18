@@ -12,20 +12,22 @@ library(plyr)
 library(data.table)
 library(ggplot2)
 
-setwd('/Users/jackpetersen/STAT_405_Diversity_Project/SourceData')  #Set the working directory
-divindex = read.csv("diversityindexpercounty.csv", header = TRUE, stringsAsFactors = FALSE)
+setwd('/Users/jackpetersen/STAT_405_Diversity_Project/Source\ Data')  #Set the working directory
+divindex = read.csv("Diversity\ Index\ Per\ County.csv", header = TRUE, stringsAsFactors = FALSE)
 divindex = subset(divindex, divindex$STATE != "") %>% select(COUNTY, STATE, Diversity.Index)
 divindex = mutate(divindex, STATE = substr(divindex$STATE, 2,3))
 divindex = mutate(divindex, COUNTYSTATE = paste(COUNTY, STATE, sep = ", "))
 
-
-setwd('/Users/jackpetersen/STAT_405_Diversity_Project/IPUMSData/educationdata')  #Set the working directory
 
 countydata = read.csv("national_county.csv", header = FALSE, stringsAsFactors = FALSE)
 
 countydata = mutate(countydata, fullname = paste(V4, V1, sep = ", "))
 countydata = select(countydata, -V5)
 countydata = rename(countydata, c("V1"="STATE", "V2"="STATEFIP", "V3"="COUNTYFIPS", "V4"="COUNTY", "fullname"="fullname"))
+
+setwd('/Users/jackpetersen/STAT_405_Diversity_Project/IPUMS\ Data/Education\ Data')  #Set the working directory
+
+
 
 edudata = read.csv("ipums_educ.csv", header = TRUE, stringsAsFactors = FALSE) # Load data csv
 # Data cleaning and manipulation
@@ -36,13 +38,17 @@ school2 = subset(school1, edudata$SCHOOL == 1 & edudata$YEAR == 2011 & edudata$C
 school3 = inner_join(school2, countydata, by="STATEFIP", "COUNTYFIPS")
 
 school4 = subset(school3, school3$COUNTYFIPS.x == school3$COUNTYFIPS.y)
-# Clean up oolsout
+
 school5 = select(school4, -REGION, -YEAR, -SCHOOL, -COUNTYFIPS.y, -fullname)
+school5 = rename(school5, c("STATEFIP"="STATEFIP", "COUNTY.x"="COUNTY.x", "COUNTYFIPS.x"="COUNTYFIPS.x", "EDUC"="EDUC", "EDUCD"="EDUCD", "STATE"="STATE", "COUNTY.y"="COUNTY"))
+
 
 school6 = full_join(school5, divindex, by="COUNTY")
 
 school7 = subset(school6, school6$STATE.x == school6$STATE.y)
+
 school8 = mutate(school7, STATECOUNTY=paste(COUNTY, STATE.x, sep=", "))
+
 school9 = select(school8, EDUC, EDUCD, STATECOUNTY, Diversity.Index)
 
 school10= as.data.frame(table(school9$STATECOUNTY))

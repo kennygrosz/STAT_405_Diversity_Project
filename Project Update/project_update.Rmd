@@ -1,0 +1,16 @@
+---
+title: "Evaluating The Effect of County Diversity on Educational, Economic, and Health Outcomes"
+author: Kenny Groszman, Jack Petersen, Bing Xu
+output: pdf_document
+fontsize: 10pt
+geometry: margin=1in
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE) 
+```
+
+##Abstract:
+
+It is often claimed that diversity brings with it many benefits. One could envision that growing up in a diverse community with exposure to many different cultures and perspectives could expand one's own understanding of the world and better-prepare someone for living in an increasingly diverse country and society. It is our claim hypothesis that the diversity of one's community has wider-reaching and quantitatively measurable effects, and we wish to test this hypothesis. 

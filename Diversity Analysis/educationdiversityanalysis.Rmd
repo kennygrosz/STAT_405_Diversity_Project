@@ -5,7 +5,7 @@ date: "November 12, 2016"
 output: html_document
 ---
 
-```{r setup}
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 
 require(dplyr)
 library(plyr)

@@ -77,11 +77,11 @@ linegraph = linegraph + labs(title="Diversity by Education Level", x="Diversity 
 linegraph = linegraph + geom_smooth(method=lm, se=TRUE)
 linegraph
 
-
-
-
-
-
-
-
 ```
+
+Commentary and Interpretation:
+
+In order to produce this graphic, we appended different pieces of data from several different sets. These joins were necessary to associate each former student in the data set with a county and then subsequently with a diversity level for said county. By summing the values of each student's education, we came up with an average for each county present in the data set. Then, we created a scatter plot and analyze the results. Our diversity index is higher with a more equal proportion of races. The education metric is based on the grade from which people dropped out (if they did).
+
+From the results, we see that diversity level in a county is not correlated to the education level of the county. In our graphic, the trend line we appended is nearly flat, suggesting that the metric we used to measure education is independent of diversity level. Moving forward, we will look at other measures of education, combining different factors given to us to move past the single variable that we used here.
+

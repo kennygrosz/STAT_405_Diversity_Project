@@ -148,8 +148,9 @@ C2 = select(C, FIPS, DiversityIndex, State.Abbreviation, GU.Name)
 
 ### Analyzing Diversity Effects on Educational Outcomes
 Here, we pull educational data frmo various sources and compare it to county-level diversity data. The hops is that we would see a relationship between diversity levels and the educational trends in a county. We wish to look at the following measures for educational outcomes:
-1. IPUMS Educational Attainment measure, which is the highest level of school or degree completed, averaged per county
-2. Percentage of Adults with:
+
+* IPUMS Educational Attainment measure, which is the highest level of school or degree completed, averaged per county
+* Percentage of Adults with:
     + No High School diploma
     + High School diploma
     + Some college or Associate's Degree

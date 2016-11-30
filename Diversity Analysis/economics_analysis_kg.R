@@ -45,9 +45,39 @@ B2$State.FIPS.Code = str_pad(B2$State.FIPS.Code, 2, pad = "0")
 B2$County.FIPS.Code = str_pad(B2$County.FIPS.Code, 3, pad = "0")
 B2 = mutate(B2,FIPS = paste(State.FIPS.Code,County.FIPS.Code, sep = ""))
 
+#HAVE TO ADD COLUMNS FOR EACH RACE, WHICH WILL MAKE SUMMARIZING EASIER
+A2=A_df_char %>% mutate(W = ifelse(RACE==1,1,0))
+A2 = A2 %>% mutate(B = ifelse(RACE==2,1,0))
+A2 = A2 %>% mutate(AI = ifelse(RACE==3,1,0))
+A2 = A2 %>% mutate(C = ifelse(RACE==4,1,0))
+A2 = A2 %>% mutate(J = ifelse(RACE==5,1,0))
+A2 = A2 %>% mutate(PI = ifelse(RACE==6,1,0))
+A2 = A2 %>% mutate(O = ifelse(RACE==7 | RACE == 8 | RACE == 9 ,1,0))
+
+
+#summarise race rsults and create diversity index
+by_county = A2 %>% group_by(FIPS) %>% dplyr::summarise( tot = n(), W = sum(W)/tot, B = sum(B)/tot, AI = sum (AI)/tot, C = sum(C)/tot, J = sum(J)/tot, PI = sum(PI)/tot, O = sum(O)/tot)
+by_county = mutate(by_county,TOT = W+B+AI+C+J+PI+O)
+by_county = by_county %>% mutate(DiversityIndex = 1 - W^2-B^2-AI^2-C^2 -J^2 - PI^2 - O^2) #calculate diversity indec
+by_county = arrange(by_county, desc(DiversityIndex)) #arrange in descenting order
+mapping = select(by_county, FIPS, DiversityIndex) 
+
+
 A_df_char %>% dplyr::group_by(FIPS) %>% 
   dplyr::summarise(q1 = quantile(POVERTY, probs = .25),
                    q3= quantile(POVERTY, probs = .75),
                    IQR = q3-q1) -> C
+C
+mapping
 
+D = dplyr::inner_join(C, mapping, by = c("FIPS"))
 
+fit = lm(formula =D$IQR ~ D$DiversityIndex)
+summary(fit)
+
+ggplot(D, aes(x=DiversityIndex, y=IQR)) + geom_point() + #Create point graph 
+labs(title="Income Gap Varies with Diversity", x="Diversity Index", y="IQR") +
+geom_smooth(method=lm, se=TRUE, formula = y ~ x) + 
+  geom_text("y = 290.994 + 56.665x")
+  
+linegraph

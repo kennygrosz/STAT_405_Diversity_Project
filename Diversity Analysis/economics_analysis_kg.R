@@ -78,6 +78,7 @@ summary(fit)
 ggplot(D, aes(x=DiversityIndex, y=IQR)) + geom_point() + #Create point graph 
 labs(title="Income Gap Varies with Diversity", x="Diversity Index", y="IQR") +
 geom_smooth(method=lm, se=TRUE, formula = y ~ x) + 
-  geom_text("y = 290.994 + 56.665x")
+  annotate("text", x = 4, y = 25, label = "y = 290.994 + 56.665x")
+
   
 linegraph

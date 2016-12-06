@@ -1,0 +1,19 @@
+---
+title: "Effects of County-Level Diversity on Educational, Economic,and Health-Related Outcomes"
+author: Kenny Groszman, Jack Petersen, Bing Xu
+output: pdf_document
+fontsize: 10pt
+geometry: margin=1in
+bibliography: bibliography.bib
+csl: cell-calcium.csl
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+iewnrowenfownfowf test text.  [@one] [@two]
+
+#References
